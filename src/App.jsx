@@ -3,6 +3,7 @@ import { Header, Footer } from "./components";
 import { useDispatch } from "react-redux";
 import authService from "./appwrite/auth";
 import { login, logout } from "./features/authSlice";
+import { Outlet } from 'react-router-dom'
 
 export default function App() {
   const [loading, setLoading] = useState(true);
@@ -26,7 +27,7 @@ export default function App() {
       <div className="w-full block m-2 ">
         <Header />
         <main>
-          ToDO{/* <Outlet/> */}
+        TODO:  <Outlet />
         </main>
         <Footer />
       </div>
