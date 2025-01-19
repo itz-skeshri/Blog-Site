@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 function PostForm({ post }) {
-  const { register, handleSubmit, watch, setValue, control } = useForm({
+  const { register, handleSubmit, watch, setValue, control, getValues } = useForm({
     defaultValues: {
       title: post?.title || "",
       slug: post?.slug || "",
@@ -16,12 +16,12 @@ function PostForm({ post }) {
   });
 
   const navigate = useNavigate();
-  const userData = useSelector((state) => state.user.userData);
+  const userData = useSelector((state) => state.auth.userData);
 
   const submit = async (data) => {
     if (post) {
       const file = data.image[0]
-        ? appwriteService.uploadFile(data.image[0])
+        ? await appwriteService.uploadFile(data.image[0])
         : null;
       if (file) {
         appwriteService.deleteFile(post.featuredImage);
@@ -35,7 +35,7 @@ function PostForm({ post }) {
       }
     } else {
       const file = data.image[0]
-        ? appwriteService.uploadFile(data.image[0])
+        ? await appwriteService.uploadFile(data.image[0])
         : null;
       if (file) {
         const fileId = file.$id;
@@ -54,10 +54,10 @@ function PostForm({ post }) {
   const slugTransform = useCallback((value) => {
     if (value && typeof value === "string") {
       return value
-        .trim()
-        .toLowerCase()
-        .replace(/^[a-zA-Z\d\s]+/g, "-")
-        .replace(/\s/g, "-");
+      .trim()
+      .toLowerCase()
+      .replace(/\s+/g, "-") 
+      .replace(/[^a-z0-9-]/g, "");
     }
     return "";
   }, []);
